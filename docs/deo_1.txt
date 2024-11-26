@@ -1,0 +1,92 @@
+mihailo.vukorep@gmail.com
+
+Imena, prezimena i indeksi članova tima *
+
+Mihailo Vukorep IN 40/2021, Marko Kolarski IN 60/2021
+
+Definisati u 2-3 rečenice problem koji će se u projektu rešavati. (primer: Rešavaće se problem detekcije karcinoma dojke na osnovu analiza iz krvi. U pitanju je klasifikacioni problem sa 2 klase.)
+
+Problem koji se rešava u ovom projektu je predviđanje cena nekretnina na osnovu različitih karakteristika, kao što su broj soba, kvadratura, lokacija i druge relevantne osobine. U pitanju je regresioni problem, gde je cilj predvideti kontinuiranu vrednost cene na osnovu više faktora koji utiču na cenu nekretnine.
+
+Koliko ima uzoraka u bazi? *
+
+21613
+
+Jednom rečenicom objasniti šta predstavlja jedan uzorak u bazi.
+
+Uzorak u bazi predstavlja podatke o jednoj nekretnini, uključujući različite karakteristike kao što su cena, broj soba, kvadratura, lokacija i drugi relevantni atributi.
+
+Koliko ima obeležja u bazi? *
+
+21
+
+Koliko ima numeričkih obeležja? *
+
+20
+
+Navesti sva obeležja (jasnim imenom na srpskom ili opisno, nebitan je naziv u samoj bazi). 
+
+ID – Identifikator nekretnine.
+Datum prodaje (date) – Datum kada je kuća prodata.
+Cena (price) – Cena kuće (ciljna vrednost za predviđanje).
+Broj spavaćih soba (bedrooms) – Broj spavaćih soba u kući.
+Broj kupatila (bathrooms) – Broj kupatila u odnosu na broj spavaćih soba.
+Kvadratura stambenog prostora (sqft_living) – Površina stambenog prostora u kvadratnim stopama.
+Kvadratura parcele (sqft_lot) – Površina parcele na kojoj se nalazi kuća u kvadratnim stopama.
+Broj spratova (floors) – Ukupan broj spratova (nivoi) u kući.
+Pristup vodi (waterfront) – Da li kuća ima pogled na vodu (1 – ima, 0 – nema).
+Pogled (view) – Da li kuća ima dobar pogled (ocenjeno u opsegu od 0 do 4).
+Stanje (condition) – Opšte stanje kuće (ocenjeno u opsegu od 1 do 5).
+Kvalitet (grade) – Ukupna ocena kuće prema sistemu ocenjivanja okruga King County.
+Kvadratura stambenog prostora iznad podruma (sqft_above) – Površina stambenog prostora iznad podruma u kvadratnim stopama.
+Kvadratura podruma (sqft_basement) – Površina podruma u kvadratnim stopama.
+Godina izgradnje (yr_built) – Godina kada je kuća izgrađena.
+Godina renoviranja (yr_renovated) – Godina kada je kuća renovirana (ako nije renovirana, vrednost je 0).
+Poštanski broj (zipcode) – Poštanski broj lokacije kuće.
+Geografska širina (lat) – Geografska širina lokacije kuće.
+Geografska dužina (long) – Geografska dužina lokacije kuće.
+Kvadratura stambenog prostora u 2015. godini (sqft_living15) – Površina stambenog prostora u 2015. godini, što može ukazivati na renoviranje.
+Kvadratura parcele u 2015. godini (sqft_lot15) – Površina parcele u 2015. godini, što može ukazivati na promene ili renoviranje.
+
+
+Ako ima kategoričkih obeležja, navesti koje od njih ima najmanji broj kategorija i koje su, i navesti ono koje ima najveći broj kategorija i koliko ih je. 
+
+Imamo sva numerička obležja osim datuma (date). Koji ima 372 jedinstvenih vrednosti.
+
+Ako bi gledali "Pristup vodi (waterfront)" obeležje kao kategoričko, ima vrednosti 0 ili 1.
+
+
+Ako se rešava regresioni problem: navesti opseg, sr.vr. i medijanu obeležja koje će se predviđati.
+Ako se rešava klasifikacioni problem: navesti procentualno koliko ima uzoraka u svakoj od klasa.
+
+Radimo regresioni problem za predvidjanje cene, pa su sledeće vrednosti:
+count      21,613.00
+mean      540,088.14
+std       367,127.20
+min        75,000.00
+25%       321,950.00
+50%       450,000.00
+75%       645,000.00
+max     7,700,000.00
+Name: price, dtype: float64
+
+Da li postoje obeležja u bazi koja smatraš da treba izbaciti iz baze? Koja su to i zašto smatraš da ih treba izbaciti? *
+
+Mogli bi izbaciti datume i ID-eve ali oni bi mogli biti korisni, jer se cena menjala kroz datume.
+Kroz podatke vidimo da imamo uzorke sa istim ID-om koje imaju različitu cenu u nekom vremenu. Što opisuje kako se cena jedne kuće menjala kroz vreme.
+
+Da li u bazi ima nedostajućih vrednosti? Ako ima, navesti za svako od obeležja koliko vrednosti mu procentualno nedostaje? 
+
+Nema nedostajućih vrednosti.
+
+Da li ima nevalidnih vrednosti u bazi? Ako ima, navesti za svako od obeležja koje su vrednosti nevalidne i zašto se smatraju nevalidnim.   
+
+Videli smo da imamo uzorke koji imaju 0 "spavaćih soba (bedrooms)" što bi možda značilo da je to samo neki plac. Sem toga nismo zaključilo da ima nekih nevalidnih vrednosti.
+
+Ako ima nedostajućih i/ili nevalidnih vrednosti u bazi, za svako od obeležja navesti kako će problem biti rešen.   *
+
+Nemamo nedostajuće/nevalidne vrednosti.
+
+Kada je završeno izbacivanje, dopuna, i drugo, navesti koliko je u sređenoj bazi ostalo uzoraka, a koliko obeležja.  
+
+Ostalo je sve isto, odnosno 21613 uzoraka i 21 obeležje.
