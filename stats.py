@@ -2,6 +2,7 @@
 
 # %% init
 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sb
@@ -39,5 +40,14 @@ plt.hist(df['price'], bins=100, density=True)
 
 
 # %%
-sb.pairplot(df)
+#pairplot = sb.pairplot(df)
+#pairplot.savefig("pairplot.png")
+# %%
+
+df.dtypes
+
+# %%
+
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+print(len(numeric_cols))  # count of numeric columns
 # %%
