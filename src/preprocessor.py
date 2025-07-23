@@ -20,6 +20,13 @@ def preprocess_data(data):
     
     # Kreiranje novih feature-a (feature engineering)
     print("🛠️ Kreiranje novih feature-a...")
+
+    # Uklanjanje nepotrebnih kolona
+    columns_to_drop = ['id', 'date']
+    existing_columns_to_drop = [col for col in columns_to_drop if col in df_processed.columns]
+    if existing_columns_to_drop:
+        df_processed = df_processed.drop(existing_columns_to_drop, axis=1)
+        print(f"🗑️ Uklonjene kolone: {existing_columns_to_drop}")
     
     new_features_count = 0
     
@@ -80,5 +87,40 @@ def preprocess_data(data):
     X_test_scaled = scaler.transform(X_test)
     
     print("✅ Podaci su uspešno pripremljeni za modelovanje!")
+    
+    return X_train, X_test, y_train, y_test, X_train_scaled, X_test_scaled, scaler, df_processed
+
+def preprocess_selected_data(selected_df):
+    """
+    Priprema odabranih podataka za modelovanje (bez feature engineering-a)
+    """
+    print("\n" + "="*50)
+    print("🔧 PRIPREMA ODABRANIH PODATAKA")
+    print("="*50)
+    
+    # Podela na features i target
+    X = selected_df.drop(['price'], axis=1)
+    y = selected_df['price']
+    
+    print(f"🎯 Target varijabla: price")
+    print(f"📋 Odabrani feature-i: {list(X.columns)}")
+    print(f"📊 Broj odabranih feature-a: {X.shape[1]}")
+    
+    # Podela na train/test (85%/15%)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.15, random_state=42, stratify=None
+    )
+    
+    print(f"\n📊 PODELA PODATAKA:")
+    print(f"Train set: {X_train.shape[0]} uzoraka ({X_train.shape[0]/len(X)*100:.1f}%)")
+    print(f"Test set: {X_test.shape[0]} uzoraka ({X_test.shape[0]/len(X)*100:.1f}%)")
+    
+    # Skaliranje podataka
+    print("⚖️ Skaliranje podataka...")
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    
+    print("✅ Odabrani podaci su uspešno pripremljeni za modelovanje!")
     
     return X_train, X_test, y_train, y_test, X_train_scaled, X_test_scaled, scaler
