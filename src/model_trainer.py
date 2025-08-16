@@ -1,7 +1,3 @@
-# ===================================================================
-# MODUL ZA TRENIRANJE MODELA
-# ===================================================================
-
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
@@ -14,11 +10,6 @@ def train_models(X_train_scaled, X_train_pca, y_train):
     """
     Trenira različite modele sa cross-validation i hyperparameter tuning
     """
-    print("\n" + "="*50)
-    print("🤖 TRENIRANJE MODELA")
-    print("="*50)
-    
-    # Definisanje modela
     models = {
         'Linear Regression': LinearRegression(),
         'Random Forest': RandomForestRegressor(random_state=42),
@@ -50,7 +41,7 @@ def train_models(X_train_scaled, X_train_pca, y_train):
     results = {}
     
     for name, model in models.items():
-        print(f"\n🔄 Treniranje {name}...")
+        print(f"\nTreniranje {name}...")
         
         # Grid Search sa Cross Validation za originalne podatke
         if param_grids[name]:
@@ -85,7 +76,7 @@ def train_models(X_train_scaled, X_train_pca, y_train):
             best_params_pca = {}
         
         # Cross-validation rezultati
-        print("  📊 Cross-validation evaluacija...")
+        print("Cross-validation evaluacija...")
         cv_scores_orig = cross_val_score(
             best_model_orig, X_train_scaled, y_train, 
             cv=5, scoring='neg_mean_squared_error'
@@ -120,11 +111,11 @@ def train_models(X_train_scaled, X_train_pca, y_train):
             'cv_r2_std_pca': cv_r2_pca.std()
         }
         
-        print(f"  ✅ {name} - Završeno!")
-        print(f"     📈 CV MSE (Original): {results[name]['cv_mse_original']:,.0f} ± {results[name]['cv_mse_std_original']:,.0f}")
-        print(f"     📈 CV MSE (PCA): {results[name]['cv_mse_pca']:,.0f} ± {results[name]['cv_mse_std_pca']:,.0f}")
-        print(f"     📊 CV R² (Original): {results[name]['cv_r2_original']:.3f} ± {results[name]['cv_r2_std_original']:.3f}")
-        print(f"     📊 CV R² (PCA): {results[name]['cv_r2_pca']:.3f} ± {results[name]['cv_r2_std_pca']:.3f}")
+        print(f"  {name} - Završeno!")
+        print(f"     CV MSE (Original): {results[name]['cv_mse_original']:,.0f} ± {results[name]['cv_mse_std_original']:,.0f}")
+        print(f"     CV MSE (PCA): {results[name]['cv_mse_pca']:,.0f} ± {results[name]['cv_mse_std_pca']:,.0f}")
+        print(f"     CV R² (Original): {results[name]['cv_r2_original']:.3f} ± {results[name]['cv_r2_std_original']:.3f}")
+        print(f"     CV R² (PCA): {results[name]['cv_r2_pca']:.3f} ± {results[name]['cv_r2_std_pca']:.3f}")
     
     return results
 

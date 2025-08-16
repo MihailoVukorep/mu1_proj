@@ -1,7 +1,3 @@
-# ===================================================================
-# MODUL ZA PRIPREMU PODATAKA
-# ===================================================================
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -9,24 +5,18 @@ from sklearn.preprocessing import StandardScaler
 
 def preprocess_data(data):
     """
-    Priprema podataka za modelovanje
+    Priprema podataka za modelovanje - radi feature engineering.
     """
-    print("\n" + "="*50)
-    print("🔧 PRIPREMA PODATAKA")
-    print("="*50)
     
     # Kreiranje kopije podataka
     df_processed = data.copy()
-    
-    # Kreiranje novih feature-a (feature engineering)
-    print("🛠️ Kreiranje novih feature-a...")
 
     # Uklanjanje nepotrebnih kolona
     columns_to_drop = ['id', 'date']
     existing_columns_to_drop = [col for col in columns_to_drop if col in df_processed.columns]
     if existing_columns_to_drop:
         df_processed = df_processed.drop(existing_columns_to_drop, axis=1)
-        print(f"🗑️ Uklonjene kolone: {existing_columns_to_drop}")
+        print(f"Uklonjene kolone: {existing_columns_to_drop}")
     
     new_features_count = 0
     
@@ -40,9 +30,9 @@ def preprocess_data(data):
         df_processed['is_renovated'] = (df_processed['yr_renovated'] > 0).astype(int)
         new_features_count += 1
     
-    # Cena po kvadratnom futu
-    df_processed['price_per_sqft'] = df_processed['price'] / df_processed['sqft_living']
-    new_features_count += 1
+    # # Cena po kvadratnom futu
+    # df_processed['price_per_sqft'] = df_processed['price'] / df_processed['sqft_living']
+    # new_features_count += 1
     
     # Procenat podruma u odnosu na ukupnu kvadraturu
     df_processed['basement_ratio'] = df_processed['sqft_basement'] / df_processed['sqft_living']
@@ -61,66 +51,35 @@ def preprocess_data(data):
     )
     new_features_count += 1
     
-    print(f"✅ Kreirano {new_features_count} novih feature-a")
-    print(f"📊 Ukupan broj feature-a: {df_processed.shape[1] - 1}")  # -1 jer ne računamo target
+    # Ispiši samo nove feature-e (one koje smo dodali u odnosu na originalne kolone)
+    original_columns = list(data.columns)
+    new_features = [col for col in df_processed.columns if col not in original_columns]
+    print(f"Kreirano {len(new_features)} novih feature-a: {new_features}")
     
-    # Podela na features i target
-    X = df_processed.drop(['price', 'price_per_sqft'], axis=1)  # price_per_sqft ne koristimo jer koristi target
-    y = df_processed['price']
+    # Uklanjanje 'price_per_sqft' jer je korišćen target za njegovo kreiranje
+    # if 'price_per_sqft' in df_processed.columns:
+    #     df_processed = df_processed.drop('price_per_sqft', axis=1)
     
-    print(f"🎯 Target varijabla: price")
-    print(f"📋 Feature-i: {list(X.columns)}")
-    
-    # Podela na train/test (85%/15%)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.15, random_state=42, stratify=None
-    )
-    
-    print(f"\n📊 PODELA PODATAKA:")
-    print(f"Train set: {X_train.shape[0]} uzoraka ({X_train.shape[0]/len(X)*100:.1f}%)")
-    print(f"Test set: {X_test.shape[0]} uzoraka ({X_test.shape[0]/len(X)*100:.1f}%)")
-    
-    # Skaliranje podataka
-    print("⚖️ Skaliranje podataka...")
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-    
-    print("✅ Podaci su uspešno pripremljeni za modelovanje!")
-    
-    return X_train, X_test, y_train, y_test, X_train_scaled, X_test_scaled, scaler, df_processed
+    return df_processed
 
-def preprocess_selected_data(selected_df):
+def split_data(X, y, test_size=0.15, random_state=42):
     """
-    Priprema odabranih podataka za modelovanje (bez feature engineering-a)
+    Deli podatke na trening i test skup.
     """
-    print("\n" + "="*50)
-    print("🔧 PRIPREMA ODABRANIH PODATAKA")
-    print("="*50)
-    
-    # Podela na features i target
-    X = selected_df.drop(['price'], axis=1)
-    y = selected_df['price']
-    
-    print(f"🎯 Target varijabla: price")
-    print(f"📋 Odabrani feature-i: {list(X.columns)}")
-    print(f"📊 Broj odabranih feature-a: {X.shape[1]}")
-    
-    # Podela na train/test (85%/15%)
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.15, random_state=42, stratify=None
+        X, y, test_size=test_size, random_state=random_state, stratify=None
     )
-    
-    print(f"\n📊 PODELA PODATAKA:")
+    print(f"\nPODELA PODATAKA:")
     print(f"Train set: {X_train.shape[0]} uzoraka ({X_train.shape[0]/len(X)*100:.1f}%)")
     print(f"Test set: {X_test.shape[0]} uzoraka ({X_test.shape[0]/len(X)*100:.1f}%)")
-    
-    # Skaliranje podataka
-    print("⚖️ Skaliranje podataka...")
+    return X_train, X_test, y_train, y_test
+
+def scale_data(X_train, X_test):
+    """
+    Skalira podatke koristeći StandardScaler.
+    """
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
-    
-    print("✅ Odabrani podaci su uspešno pripremljeni za modelovanje!")
-    
-    return X_train, X_test, y_train, y_test, X_train_scaled, X_test_scaled, scaler
+    print("\nSkalirani su podaci")
+    return X_train_scaled, X_test_scaled, scaler

@@ -1,7 +1,3 @@
-# ===================================================================
-# MODUL ZA PCA ANALIZU
-# ===================================================================
-
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
@@ -10,17 +6,13 @@ def apply_pca(X_train_scaled, X_test_scaled, X_train, n_components=0.95):
     """
     Primenjuje PCA za smanjenje dimenzionalnosti
     """
-    print("\n" + "="*50)
-    print("🔍 PRIMENA PCA")
-    print("="*50)
-    
     pca = PCA(n_components=n_components, random_state=42)
     X_train_pca = pca.fit_transform(X_train_scaled)
     X_test_pca = pca.transform(X_test_scaled)
     
-    print(f"📊 Originalan broj feature-a: {X_train_scaled.shape[1]}")
-    print(f"🎯 Broj komponenti nakon PCA: {X_train_pca.shape[1]}")
-    print(f"📈 Objašnjena varijansa: {pca.explained_variance_ratio_.sum():.3f} ({pca.explained_variance_ratio_.sum()*100:.1f}%)")
+    print(f"Originalan broj feature-a: {X_train_scaled.shape[1]}")
+    print(f"Broj komponenti nakon PCA: {X_train_pca.shape[1]}")
+    print(f"Objašnjena varijansa: {pca.explained_variance_ratio_.sum():.3f} ({pca.explained_variance_ratio_.sum()*100:.1f}%)")
     
     # Vizuelizacija objašnjene varijanse
     plt.figure(figsize=(12, 5))
@@ -48,7 +40,7 @@ def apply_pca(X_train_scaled, X_test_scaled, X_train, n_components=0.95):
     
     # Prikaz najvažnijih feature-a za prve komponente
     feature_names = X_train.columns
-    print(f"\n🏆 NAJVAŽNIJI FEATURE-I ZA PRVE 3 KOMPONENTE:")
+    print(f"\nNAJVAŽNIJI FEATURE-I ZA PRVE 3 KOMPONENTE:")
     
     for i in range(min(3, pca.n_components_)):
         component = pca.components_[i]
