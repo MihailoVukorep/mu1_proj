@@ -6,10 +6,6 @@ def analyze_predictions(best_result, model_name, y_test):
     """
     Detaljana analiza predikcija najboljeg modela
     """
-    print(f"\n{'='*60}")
-    print(f"🔍 ANALIZA PREDIKCIJA - {model_name}")
-    print(f"{'='*60}")
-    
     y_true = y_test
     y_pred = best_result['y_pred']
     
@@ -96,21 +92,21 @@ def analyze_predictions(best_result, model_name, y_test):
     plt.show()
     
     # Statistike grešaka
-    print(f"\n📊 STATISTIKE GREŠAKA:")
+    print(f"\nSTATISTIKE GREŠAKA:")
     print(f"Srednja apsolutna greška: ${np.mean(np.abs(residuals)):,.0f}")
     print(f"Medijana apsolutne greške: ${np.median(np.abs(residuals)):,.0f}")
     print(f"Standardna devijacija residuala: ${np.std(residuals):,.0f}")
     print(f"Maksimalna pozitivna greška: ${residuals.max():,.0f}")
     print(f"Maksimalna negativna greška: ${residuals.min():,.0f}")
     
-    print(f"\n🎯 PROCENAT TAČNIH PREDIKCIJA:")
+    print(f"\nPROCENAT TAČNIH PREDIKCIJA:")
     for threshold in [5, 10, 15, 20, 25]:
         within_threshold = (abs_pct_error <= threshold).mean() * 100
         print(f"U ±{threshold}%: {within_threshold:.1f}%")
     
     # Identifikacija najgorih predikcija
     worst_predictions_idx = np.argsort(abs_pct_error)[-5:]
-    print(f"\n❌ 5 NAJGORIH PREDIKCIJA:")
+    print(f"\n5 NAJGORIH PREDIKCIJA:")
     print(f"{'Stvarna':<12} {'Predviđena':<12} {'Greška':<10} {'Greška %':<10}")
     print("-" * 50)
     for idx in worst_predictions_idx[::-1]:

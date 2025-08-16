@@ -6,14 +6,10 @@ def evaluate_final_models(results, X_test_scaled, X_test_pca, y_test):
     """
     Finalna evaluacija najboljih modela na test skupu
     """
-    print("\n" + "="*50)
-    print("🎯 FINALNA EVALUACIJA NA TEST SKUPU")
-    print("="*50)
-    
     final_results = {}
     
     for name, result in results.items():
-        print(f"\n📊 Evaluacija {name}...")
+        print(f"\nEvaluacija {name}...")
         
         # Odabir boljeg modela (original vs PCA)
         if result['cv_r2_original'] > result['cv_r2_pca']:
@@ -54,14 +50,14 @@ def evaluate_final_models(results, X_test_scaled, X_test_pca, y_test):
             'y_pred': y_pred
         }
         
-        print(f"  🏆 Najbolji prostor: {space_type}")
-        print(f"  📈 Test MAE: ${mae:,.0f}")
-        print(f"  📈 Test MSE: {mse:,.0f}")
-        print(f"  📈 Test RMSE: ${rmse:,.0f}")
-        print(f"  📊 Test R²: {r2:.3f}")
-        print(f"  🎯 Predikcije u ±10%: {within_10_percent:.1f}%")
-        print(f"  🎯 Predikcije u ±20%: {within_20_percent:.1f}%")
-    
+        print(f"  Najbolji prostor: {space_type}")
+        print(f"  Test MAE: ${mae:,.0f}")
+        print(f"  Test MSE: {mse:,.0f}")
+        print(f"  Test RMSE: ${rmse:,.0f}")
+        print(f"  Test R²: {r2:.3f}")
+        print(f"  Predikcije u ±10%: {within_10_percent:.1f}%")
+        print(f"  Predikcije u ±20%: {within_20_percent:.1f}%")
+
     return final_results
 
 def display_results_table(final_results):
@@ -69,7 +65,7 @@ def display_results_table(final_results):
     Prikazuje tabelu sa svim rezultatima
     """
     print(f"\n{'='*80}")
-    print("📋 TABELA SVIH REZULTATA")
+    print("TABELA SVIH REZULTATA")
     print(f"{'='*80}")
     
     # Header
@@ -89,9 +85,9 @@ def display_results_table(final_results):
     
     # Najbolji model
     best_model = sorted_results[0]
-    print(f"🏆 NAJBOLJI MODEL: {best_model[0]} ({best_model[1]['space_type']} prostor)")
-    print(f"   Test R²: {best_model[1]['test_r2']:.3f}")
-    print(f"   RMSE: ${best_model[1]['test_rmse']:,.0f}")
+    print(f"NAJBOLJI MODEL: {best_model[0]} ({best_model[1]['space_type']} prostor)")
+    print(f"Test R²: {best_model[1]['test_r2']:.3f}")
+    print(f"RMSE: ${best_model[1]['test_rmse']:,.0f}")
 
 def plot_final_results(final_results):
     """

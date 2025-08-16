@@ -45,7 +45,7 @@ def train_models(X_train_scaled, X_train_pca, y_train):
         
         # Grid Search sa Cross Validation za originalne podatke
         if param_grids[name]:
-            print("  🔍 Pretraga hiperparametara (originalni prostor)...")
+            print("Pretraga hiperparametara (originalni prostor)...")
             grid_search_orig = GridSearchCV(
                 model, param_grids[name], 
                 cv=5, scoring='neg_mean_squared_error', 
@@ -55,7 +55,7 @@ def train_models(X_train_scaled, X_train_pca, y_train):
             best_model_orig = grid_search_orig.best_estimator_
             best_params_orig = grid_search_orig.best_params_
             
-            print("  🔍 Pretraga hiperparametara (PCA prostor)...")
+            print("Pretraga hiperparametara (PCA prostor)...")
             grid_search_pca = GridSearchCV(
                 model, param_grids[name], 
                 cv=5, scoring='neg_mean_squared_error', 
@@ -111,11 +111,11 @@ def train_models(X_train_scaled, X_train_pca, y_train):
             'cv_r2_std_pca': cv_r2_pca.std()
         }
         
-        print(f"  {name} - Završeno!")
-        print(f"     CV MSE (Original): {results[name]['cv_mse_original']:,.0f} ± {results[name]['cv_mse_std_original']:,.0f}")
-        print(f"     CV MSE (PCA): {results[name]['cv_mse_pca']:,.0f} ± {results[name]['cv_mse_std_pca']:,.0f}")
-        print(f"     CV R² (Original): {results[name]['cv_r2_original']:.3f} ± {results[name]['cv_r2_std_original']:.3f}")
-        print(f"     CV R² (PCA): {results[name]['cv_r2_pca']:.3f} ± {results[name]['cv_r2_std_pca']:.3f}")
+        print(f"{name} - Završeno!")
+        print(f"CV MSE (Original): {results[name]['cv_mse_original']:,.0f} ± {results[name]['cv_mse_std_original']:,.0f}")
+        print(f"CV MSE (PCA): {results[name]['cv_mse_pca']:,.0f} ± {results[name]['cv_mse_std_pca']:,.0f}")
+        print(f"CV R² (Original): {results[name]['cv_r2_original']:.3f} ± {results[name]['cv_r2_std_original']:.3f}")
+        print(f"CV R² (PCA): {results[name]['cv_r2_pca']:.3f} ± {results[name]['cv_r2_std_pca']:.3f}")
     
     return results
 
