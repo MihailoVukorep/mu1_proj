@@ -6,18 +6,20 @@ def analyze_predictions(best_result, model_name, y_test):
     """
     Detaljana analiza predikcija najboljeg modela
     """
-    y_true = y_test
-    y_pred = best_result['y_pred']
+    # Koristi striktno poziciono indeksiranje preko NumPy da bi se izbegli KeyError-i
+    y_true = y_test  # zadržavamo Series za kompatibilnost gde je zgodno
+    y_true_np = np.asarray(y_test)
+    y_pred = np.asarray(best_result['y_pred'])
     
     # Residuali
-    residuals = y_true - y_pred
+    residuals = y_true_np - y_pred
     
     fig, axes = plt.subplots(2, 3, figsize=(18, 12))
     
     # 1. Actual vs Predicted
-    axes[0,0].scatter(y_true, y_pred, alpha=0.6, s=20)
-    min_price = min(y_true.min(), y_pred.min())
-    max_price = max(y_true.max(), y_pred.max())
+    axes[0,0].scatter(y_true_np, y_pred, alpha=0.6, s=20)
+    min_price = min(y_true_np.min(), y_pred.min())
+    max_price = max(y_true_np.max(), y_pred.max())
     axes[0,0].plot([min_price, max_price], [min_price, max_price], 'r--', lw=2)
     axes[0,0].set_xlabel('Stvarna cena ($)')
     axes[0,0].set_ylabel('Predviđena cena ($)')
@@ -57,9 +59,9 @@ def analyze_predictions(best_result, model_name, y_test):
     range_accuracies = []
     
     for low, high in price_ranges:
-        mask = (y_true >= low) & (y_true < high)
+        mask = (y_true_np >= low) & (y_true_np < high)
         if mask.sum() > 0:
-            range_errors = np.abs((y_pred[mask] - y_true[mask]) / y_true[mask]) * 100
+            range_errors = np.abs((y_pred[mask] - y_true_np[mask]) / y_true_np[mask]) * 100
             within_10 = (range_errors <= 10).mean() * 100
             range_accuracies.append(within_10)
         else:
@@ -78,7 +80,7 @@ def analyze_predictions(best_result, model_name, y_test):
                           f'{acc:.1f}%', ha='center', va='bottom', fontweight='bold')
     
     # 6. Distribucija apsolutne greške u procentima
-    abs_pct_error = np.abs((y_pred - y_true) / y_true) * 100
+    abs_pct_error = np.abs((y_pred - y_true_np) / y_true_np) * 100
     axes[1,2].hist(abs_pct_error, bins=50, alpha=0.7, color='orange', edgecolor='black')
     axes[1,2].axvline(x=10, color='r', linestyle='--', lw=2, label='10%')
     axes[1,2].axvline(x=20, color='g', linestyle='--', lw=2, label='20%')
@@ -110,7 +112,7 @@ def analyze_predictions(best_result, model_name, y_test):
     print(f"{'Stvarna':<12} {'Predviđena':<12} {'Greška':<10} {'Greška %':<10}")
     print("-" * 50)
     for idx in worst_predictions_idx[::-1]:
-        actual = y_true.iloc[idx]
+        actual = y_true_np[idx]
         predicted = y_pred[idx]
         error = predicted - actual
         error_pct = abs_pct_error[idx]
