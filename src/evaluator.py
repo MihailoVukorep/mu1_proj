@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+# Bira već optimizovane modele (izabrani hiperparametri) i koji je bolji PCA ili original i daje rezultate
 def evaluate_final_models(results, X_test_scaled, X_test_pca, y_test):
     """
     Finalna evaluacija najboljih modela na test skupu
@@ -11,7 +12,7 @@ def evaluate_final_models(results, X_test_scaled, X_test_pca, y_test):
     for name, result in results.items():
         print(f"\nEvaluacija {name}...")
         
-        # Odabir boljeg modela (original vs PCA)
+        # Odabir boljeg modela na osnovu R2 (original vs PCA)
         if result['cv_r2_original'] > result['cv_r2_pca']:
             best_model = result['model_original']
             X_test_use = X_test_scaled
@@ -31,8 +32,8 @@ def evaluate_final_models(results, X_test_scaled, X_test_pca, y_test):
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
         r2 = r2_score(y_test, y_pred)
-        
-        # Procenat predikcija u ±10% od tačne vrednosti
+
+        # Procenat predikcija u ±10% i 20% od tačne vrednosti (koliko rezultata je unutar tih granica)
         percentage_error = np.abs((y_pred - y_test) / y_test) * 100
         within_10_percent = np.sum(percentage_error <= 10) / len(percentage_error) * 100
         within_20_percent = np.sum(percentage_error <= 20) / len(percentage_error) * 100

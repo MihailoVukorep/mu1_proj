@@ -44,6 +44,9 @@ def train_models(X_train_scaled, X_train_pca, y_train):
         print(f"\nTreniranje {name}...")
         
         # Grid Search sa Cross Validation za originalne podatke
+        # Mogao je i "RandomizedSearchCV" (brži) umesto "GridSearchCV"
+        # GridSearchCV = proba sve kombinacije hiperparametara na K-fold validaciji
+        # RandomizedSearchCV = nasumično bira kombinacije (brže)
         if param_grids[name]:
             print("Pretraga hiperparametara (originalni prostor)...")
             grid_search_orig = GridSearchCV(

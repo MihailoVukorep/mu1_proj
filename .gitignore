@@ -1,3 +1,4 @@
 p3env/
 __pycache__/
 .venv/
+X_train_pca.csv
