@@ -53,15 +53,16 @@ def explore_data(data):
     # 3. Korelaciona matrica (top 10 korelacija sa cenom)
     plt.subplot(3, 3, 3)
     corr_matrix = data.select_dtypes(include=[np.number]).corr()
-    price_corr = corr_matrix['price'].abs().sort_values(ascending=False).head(10)
+    price_corr = corr_matrix['price'].drop('price').abs().sort_values(ascending=False).head(10)
     price_corr_vals = corr_matrix['price'][price_corr.index]
-    
     colors = ['red' if x < 0 else 'green' for x in price_corr_vals]
     plt.barh(range(len(price_corr_vals)), price_corr_vals.values, color=colors, alpha=0.7)
+
     plt.yticks(range(len(price_corr_vals)), price_corr_vals.index, fontsize=10)
     plt.xlabel('Korelacija sa cenom')
     plt.title('Top 10 korelacija sa cenom', fontsize=14, fontweight='bold')
     plt.grid(axis='x', alpha=0.3)
+
     
     # 4. Kvadratura vs Cena
     plt.subplot(3, 3, 4)
