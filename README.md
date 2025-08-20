@@ -73,29 +73,6 @@ pip install -r requirements.txt
 main.ipynb
 ```
 
-## 📁 Project Structure
-
-```
-mu1_proj/
-├── 📓 main.ipynb              # Interactive Jupyter notebook
-├── 📊 stats.py                # Statistical analysis utilities
-├── 📋 requirements.txt        # Python dependencies
-├── 🔧 setup-env.sh           # Environment setup script
-├── 📁 dataset/
-│   ├── kc_house_data.csv     # Main dataset
-│   └── kc_house_data.csv.zip # Compressed dataset
-├── 📁 src/                   # Source code modules
-│   ├── __init__.py
-│   ├── 📥 data_loader.py     # Data loading and EDA
-│   ├── 🔧 preprocessor.py    # Data preprocessing
-│   ├── 📉 pca_analyzer.py    # PCA implementation
-│   ├── 🤖 model_trainer.py   # Model training
-│   ├── 📊 evaluator.py       # Model evaluation
-│   └── 🔍 analyzer.py        # Prediction analysis
-├── 📁 docs/
-│   └── deo_1.txt            # Documentation
-```
-
 ## 🔬 Methodology
 
 ### 1. Data Preprocessing
