@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import cross_val_score, GridSearchCV
+from joblib import parallel_backend
 
 def train_models(X_train_scaled, X_train_pca, y_train):
     """
@@ -40,85 +41,86 @@ def train_models(X_train_scaled, X_train_pca, y_train):
     
     results = {}
     
-    for name, model in models.items():
-        print(f"\nTreniranje {name}...")
-        
-        # Grid Search sa Cross Validation za originalne podatke
-        # Mogao je i "RandomizedSearchCV" (brži) umesto "GridSearchCV"
-        # GridSearchCV = proba sve kombinacije hiperparametara na K-fold validaciji
-        # RandomizedSearchCV = nasumično bira kombinacije (brže)
-        if param_grids[name]:
-            print("Pretraga hiperparametara (originalni prostor)...")
-            grid_search_orig = GridSearchCV(
-                model, param_grids[name], 
-                cv=5, scoring='neg_mean_squared_error', 
-                n_jobs=-1, verbose=0
+    with parallel_backend("threading", n_jobs=-1):
+        for name, model in models.items():
+            print(f"\nTreniranje {name}...")
+            
+            # Grid Search sa Cross Validation za originalne podatke
+            # Mogao je i "RandomizedSearchCV" (brži) umesto "GridSearchCV"
+            # GridSearchCV = proba sve kombinacije hiperparametara na K-fold validaciji
+            # RandomizedSearchCV = nasumično bira kombinacije (brže)
+            if param_grids[name]:
+                print("Pretraga hiperparametara (originalni prostor)...")
+                grid_search_orig = GridSearchCV(
+                    model, param_grids[name], 
+                    cv=5, scoring='neg_mean_squared_error', 
+                    n_jobs=-1, verbose=0
+                )
+                grid_search_orig.fit(X_train_scaled, y_train)
+                best_model_orig = grid_search_orig.best_estimator_
+                best_params_orig = grid_search_orig.best_params_
+                
+                print("Pretraga hiperparametara (PCA prostor)...")
+                grid_search_pca = GridSearchCV(
+                    model, param_grids[name], 
+                    cv=5, scoring='neg_mean_squared_error', 
+                    n_jobs=-1, verbose=0
+                )
+                grid_search_pca.fit(X_train_pca, y_train)
+                best_model_pca = grid_search_pca.best_estimator_
+                best_params_pca = grid_search_pca.best_params_
+                
+            else:
+                # Za Linear Regression nema hiperparametara
+                best_model_orig = model
+                best_model_orig.fit(X_train_scaled, y_train)
+                best_params_orig = {}
+                
+                best_model_pca = LinearRegression()
+                best_model_pca.fit(X_train_pca, y_train)
+                best_params_pca = {}
+            
+            # Cross-validation rezultati
+            print("Cross-validation evaluacija...")
+            cv_scores_orig = cross_val_score(
+                best_model_orig, X_train_scaled, y_train, 
+                cv=5, scoring='neg_mean_squared_error'
             )
-            grid_search_orig.fit(X_train_scaled, y_train)
-            best_model_orig = grid_search_orig.best_estimator_
-            best_params_orig = grid_search_orig.best_params_
-            
-            print("Pretraga hiperparametara (PCA prostor)...")
-            grid_search_pca = GridSearchCV(
-                model, param_grids[name], 
-                cv=5, scoring='neg_mean_squared_error', 
-                n_jobs=-1, verbose=0
+            cv_scores_pca = cross_val_score(
+                best_model_pca, X_train_pca, y_train, 
+                cv=5, scoring='neg_mean_squared_error'
             )
-            grid_search_pca.fit(X_train_pca, y_train)
-            best_model_pca = grid_search_pca.best_estimator_
-            best_params_pca = grid_search_pca.best_params_
             
-        else:
-            # Za Linear Regression nema hiperparametara
-            best_model_orig = model
-            best_model_orig.fit(X_train_scaled, y_train)
-            best_params_orig = {}
+            # R2 score cross-validation
+            cv_r2_orig = cross_val_score(
+                best_model_orig, X_train_scaled, y_train, 
+                cv=5, scoring='r2'
+            )
+            cv_r2_pca = cross_val_score(
+                best_model_pca, X_train_pca, y_train, 
+                cv=5, scoring='r2'
+            )
             
-            best_model_pca = LinearRegression()
-            best_model_pca.fit(X_train_pca, y_train)
-            best_params_pca = {}
-        
-        # Cross-validation rezultati
-        print("Cross-validation evaluacija...")
-        cv_scores_orig = cross_val_score(
-            best_model_orig, X_train_scaled, y_train, 
-            cv=5, scoring='neg_mean_squared_error'
-        )
-        cv_scores_pca = cross_val_score(
-            best_model_pca, X_train_pca, y_train, 
-            cv=5, scoring='neg_mean_squared_error'
-        )
-        
-        # R2 score cross-validation
-        cv_r2_orig = cross_val_score(
-            best_model_orig, X_train_scaled, y_train, 
-            cv=5, scoring='r2'
-        )
-        cv_r2_pca = cross_val_score(
-            best_model_pca, X_train_pca, y_train, 
-            cv=5, scoring='r2'
-        )
-        
-        results[name] = {
-            'model_original': best_model_orig,
-            'model_pca': best_model_pca,
-            'best_params_original': best_params_orig,
-            'best_params_pca': best_params_pca,
-            'cv_mse_original': -cv_scores_orig.mean(),
-            'cv_mse_pca': -cv_scores_pca.mean(),
-            'cv_mse_std_original': cv_scores_orig.std(),
-            'cv_mse_std_pca': cv_scores_pca.std(),
-            'cv_r2_original': cv_r2_orig.mean(),
-            'cv_r2_pca': cv_r2_pca.mean(),
-            'cv_r2_std_original': cv_r2_orig.std(),
-            'cv_r2_std_pca': cv_r2_pca.std()
-        }
-        
-        print(f"{name} - Završeno!")
-        print(f"CV MSE (Original): {results[name]['cv_mse_original']:,.0f} ± {results[name]['cv_mse_std_original']:,.0f}")
-        print(f"CV MSE (PCA): {results[name]['cv_mse_pca']:,.0f} ± {results[name]['cv_mse_std_pca']:,.0f}")
-        print(f"CV R² (Original): {results[name]['cv_r2_original']:.3f} ± {results[name]['cv_r2_std_original']:.3f}")
-        print(f"CV R² (PCA): {results[name]['cv_r2_pca']:.3f} ± {results[name]['cv_r2_std_pca']:.3f}")
+            results[name] = {
+                'model_original': best_model_orig,
+                'model_pca': best_model_pca,
+                'best_params_original': best_params_orig,
+                'best_params_pca': best_params_pca,
+                'cv_mse_original': -cv_scores_orig.mean(),
+                'cv_mse_pca': -cv_scores_pca.mean(),
+                'cv_mse_std_original': cv_scores_orig.std(),
+                'cv_mse_std_pca': cv_scores_pca.std(),
+                'cv_r2_original': cv_r2_orig.mean(),
+                'cv_r2_pca': cv_r2_pca.mean(),
+                'cv_r2_std_original': cv_r2_orig.std(),
+                'cv_r2_std_pca': cv_r2_pca.std()
+            }
+            
+            print(f"{name} - Završeno!")
+            print(f"CV MSE (Original): {results[name]['cv_mse_original']:,.0f} ± {results[name]['cv_mse_std_original']:,.0f}")
+            print(f"CV MSE (PCA): {results[name]['cv_mse_pca']:,.0f} ± {results[name]['cv_mse_std_pca']:,.0f}")
+            print(f"CV R² (Original): {results[name]['cv_r2_original']:.3f} ± {results[name]['cv_r2_std_original']:.3f}")
+            print(f"CV R² (PCA): {results[name]['cv_r2_pca']:.3f} ± {results[name]['cv_r2_std_pca']:.3f}")
     
     return results
 
