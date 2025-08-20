@@ -18,8 +18,8 @@ This project develops and compares multiple machine learning models to predict h
 
 ## 📊 Dataset
 
-**Source**: King County House Sales Dataset  
-**Location**: `dataset/kc_house_data.csv`  
+**Source**: [King County House Sales Dataset](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction)
+**Location**: `dataset/kc_house_data.csv`
 **Size**: 21,613 records with 21 features
 
 ### Key Features:
