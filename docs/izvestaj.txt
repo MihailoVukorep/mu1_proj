@@ -1,0 +1,24 @@
+Predvidjanje cene kuće
+
+Mihailo Vukorep IN 40/2021
+
+I. Uvod
+Ovaj projekat razvija i upoređuje više modela mašinskog učenja kako bi se predvidele cene kuća.
+Analiza obuhvata:
+- istraživačku analizu podataka (EDA)
+- inženjering karakteristika
+- smanjenje dimenzionalnosti korišćenjem analize glavnih komponenti (PCA)
+- procenu modela sa unakrsnom validacijom.
+
+II. Baza podataka
+Korišćeni skup podataka potiče sa platforme Kaggle i odnosi se na prodaju kuća u okrugu King, Vašington, Sjedinjene Američke Države. Baza obuhvata kupljene kuće u periodu između maja 2014. i maja 2015. godine.
+U bazi se nalazi ukupno 21 613 uzoraka (redova), gde svaki uzorak predstavlja jednu kuću sa pripadajućim karakteristikama. Broj obeležja (atributa) iznosi 21, uključujući jedinstveni identifikator (id) i ciljnu promenljivu (cenu). Obeležja se mogu podeliti na numerička i kategorička, pri čemu dominiraju numeričke vrednosti. Konkretno:
+
+Numerička obeležja: price, bedrooms, bathrooms, sqft_living, sqft_lot, floors, sqft_above, sqft_basement, yr_built, yr_renovated, lat, long, sqft_living15, sqft_lot15.
+Binarna obeležja (0/1): waterfront (da li kuća ima izlaz na vodu), view (postoji li pogled).
+Ordinalna obeležja: condition, grade (arhitektonski i konstruktivni kvalitet).
+Kategorijska obeležja: zipcode (poštanski broj), date (datum prodaje, originalno u formatu stringa).
+Identifikator: id (nema analitičku vrednost, koristi se samo za jedinstveno označavanje kuće).
+
+Ciljna promenljiva u analizi je price, odnosno prodajna cena kuće izražena u američkim dolarima.
+
