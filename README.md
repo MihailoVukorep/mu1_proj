@@ -1,11 +1,9 @@
 # 🏠 House Price Prediction ML Project
-
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0%2B-orange.svg)](https://scikit-learn.org/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
 
 ## 🎯 Project Overview
-
 This project develops and compares multiple machine learning models to predict house prices in King County, Washington. The analysis includes comprehensive exploratory data analysis (EDA), feature engineering, dimensionality reduction using Principal Component Analysis (PCA), and model evaluation with cross-validation.
 
 ### Key Objectives:
@@ -17,10 +15,9 @@ This project develops and compares multiple machine learning models to predict h
 - 🎨 Create insightful visualizations
 
 ## 📊 Dataset
-
-**Source**: [King County House Sales Dataset](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction)
-**Location**: `dataset/kc_house_data.csv`
-**Size**: 21,613 records with 21 features
+- **Source**: [King County House Sales Dataset](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction)
+- **Location**: `dataset/kc_house_data.csv`
+- **Size**: 21,613 records with 21 features
 
 ### Key Features:
 - `price`: Target variable (house price in USD)
